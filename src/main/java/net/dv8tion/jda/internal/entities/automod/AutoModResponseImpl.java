@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.utils.data.DataObject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.time.Duration;
+import java.util.Optional;
 
 public class AutoModResponseImpl implements AutoModResponse
 {
@@ -66,7 +67,7 @@ public class AutoModResponseImpl implements AutoModResponse
 
     public AutoModResponseImpl(Guild guild, DataObject json)
     {
-        DataObject metadata = json.getObject("metadata");
+        DataObject metadata = json.optObject("metadata").orElseGet(DataObject::empty);
         this.type = AutoModResponse.Type.fromKey(json.getInt("type", -1));
         this.channel = guild.getChannelById(GuildMessageChannel.class, metadata.getUnsignedLong("channel_id", 0L));
         this.customMessage = metadata.getString("custom_message", null);
